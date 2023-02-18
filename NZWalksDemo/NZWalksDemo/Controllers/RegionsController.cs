@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalksDemo.Data;
 using NZWalksDemo.Interfaces;
@@ -7,20 +8,24 @@ using NZWalksDemo.Models.DTO;
 
 namespace NZWalksDemo.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class RegionsController : Controller
     {
         private readonly IRegionRepository _repository;
         private readonly IMapper _mapper;
+        //private readonly ITokenHandler _tokenHandler;
 
         public RegionsController(IRegionRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
+            //_tokenHandler = tokenHandler;
         }
 
         [HttpGet("getallregions")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllRegionsAsync()
         {
             var regions = await _repository.GetAllAsync();
